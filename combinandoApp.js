@@ -81,22 +81,21 @@ function asignDigit(digit) {
         ui.display += v.numB;
         v.numB = parseFloat(v.numB)
         console.log("assigned numB: " + v.numB)
+   // "NUM A TOMA EL LUGAR DE TOTAL PARA VOLVER A RECIBIR NUMB QUE NO TIENE QUE EXISTIR"
         whichOperationIs(v.operator)
         v.numA = v.total
         console.log("Result: " + v.total)
 
     } else if (v.numA && isSymbol(digit)) {
+        v.numB = ""
         ui.display = v.total
         v.operator = digit
         if (v.lastOperator == v.operator && isSymbol(v.lastDigit)) {
             alert("repeats " + v.lastOperator)
         } else {
-
             v.lastDigit = digit;
             v.lastOperator = v.operator;
             console.log("assigned operator: " + v.operator)
-            
-
         }
     } else if (v.numA && v.numB && isSymbol(digit)) {
         // if (isNumber(v.lastDigit)) {
