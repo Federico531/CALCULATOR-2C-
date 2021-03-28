@@ -1,0 +1,6 @@
+    if (!v.operator && isNumber(digit)) {
+        v.total += ""  + parseFloat(digit);
+        v.numA = parseFloat(v.total)
+        ui.display = v.total;
+        console.log("assigned numA: " + v.numA)
+}
