@@ -51,7 +51,7 @@ class Operation {
         return v.total
     }
     equals() {
-
+        whichOperationIs(v.lastDigit)
     }
 }
 //CONCATENATE DIGIT
