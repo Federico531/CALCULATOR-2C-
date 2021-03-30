@@ -1,4 +1,5 @@
-
+//FIX "123" "+" "321" "=" (479) (=) (480)
+//NUM B = 1
 //UI Y LOGICA SEPARADOS
 //ALL CONSOLE LOGS ARE UI
 //MAKE DOT BUTTON
@@ -8,7 +9,6 @@ class UI {
     constructor() {
         this.isOn = false
         this.display;
-
     }
 }
 class History {
@@ -27,10 +27,8 @@ class Value {
         this.lastOperator = lastOperator
         this.lastDigit = lastDigit
         this.total = total
-
     }
 }
-
 class Operation {
     sum(a, b) {
         v.total = a + b
@@ -51,7 +49,6 @@ class Operation {
     equals() {
     }
 }
-
 const v = new Value()
 const ui = new UI()
 const h = new History()
@@ -68,8 +65,7 @@ function asignDigit(digit) {
         secondDigitIs(digit)
     } else if (isSymbol(digit)) {
         doOperation(digit)
-    } 
-    
+    }
 }
 
 let firstDigitIs = (digit) => {
@@ -80,10 +76,10 @@ let firstDigitIs = (digit) => {
 }
 let secondDigitIs = (digit) => {
     ui.display = "";
-    v.lastDigit = digit;  //SIRVE ASI O AL HISTORIAL?
     v.numB += "" + parseFloat(digit);
     ui.display += v.numB;
-    v.numB = parseFloat(v.numB)
+    v.numB = parseFloat(v.numB);
+    v.lastDigit = v.numB;
     console.log("assigned numB: " + v.numB)
     whichOperationIs(v.operator)
     v.numA = v.total
