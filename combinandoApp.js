@@ -15,7 +15,7 @@ class History {
     constructor() {
         this.anyDigit = [];
         this.total = [];
-        this.repeatsEqual = false;
+        //        this.repeatsEqual = false;
         this.wasEqualBefore = false;
         this.wasNumberBefore = false;
     }
@@ -31,24 +31,11 @@ class Value {
     }
 }
 class Operation {
-    sum(a, b) {
-        v.total = a + b
-        return v.total
-    }
-    substract(a, b) {
-        v.total = a - b
-        return v.total
-    }
-    multiply(a, b) {
-        v.total = a * b
-        return v.total
-    }
-    divide(a, b) {
-        v.total = a / b
-        return v.total
-    }
-    equals() {
-    }
+    sum(a, b) { return v.total = a + b }
+    substract(a, b) { return v.total = a - b }
+    multiply(a, b) { return v.total = a * b }
+    divide(a, b) { return v.total = a / b }
+    equals() { }
 }
 const v = new Value()
 const ui = new UI()
@@ -57,16 +44,10 @@ const operation = new Operation()
 
 function asignDigit(digit) {
     //separar lo que hay adentro en funciones
-    if (!v.numA) {
-        v.total = ""
-    }
-    if (!v.operator && isNumber(digit)) {
-        firstDigitIs(digit)
-    } else if (v.operator && isNumber(digit)) {
-        secondDigitIs(digit)
-    } else if (isSymbol(digit)) {
-        doOperation(digit)
-    }
+    if (!v.numA) return v.total = "";
+    if (!v.operator && isNumber(digit)) return firstDigitIs(digit)
+    else if (v.operator && isNumber(digit)) return secondDigitIs(digit)
+    else if (isSymbol(digit)) return doOperation(digit)
 }
 
 let firstDigitIs = (digit) => {
@@ -91,16 +72,14 @@ let secondDigitIs = (digit) => {
 }
 
 let doOperation = (digit) => {
-
     ui.display = v.total
     v.operator = digit
-    
+
     if (v.lastOperator == v.operator && !digit.includes('=') && !h.wasEqualBefore && !h.wasNumberBefore) {
         alert("repeats " + v.lastOperator)
-
     } else if (digit.includes('=')) {
         h.display = ""
-        console.log("Reassigned operator" + v.lastOperator + "through equal: " )
+        console.log("Reassigned operator" + v.lastOperator + "through equal: ")
         if (h.wasEqualBefore) {
             console.log("pasa por aca")
             v.numB = parseFloat(v.lastDigit)
