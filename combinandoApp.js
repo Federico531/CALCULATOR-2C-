@@ -69,6 +69,7 @@ function asignDigit(digit) {
     } else if (isSymbol(digit)) {
         doOperation(digit)
     } 
+    
 }
 
 let firstDigitIs = (digit) => {
@@ -179,6 +180,10 @@ document.getElementById("ON/C").addEventListener('click', () => {
 document.getElementById("OFF").addEventListener('click', () => {
     //MAKE TOAST SI NO PRENDE EN 10 SEGUNDOS O HACEN CLICK CON LA CALCU APAGADA
     v.total = "";
+    v.numA = "";
+    v.numB = "";
+    v.operator = "";
+    ui.display = "";
     h.values = [];
     console.log("apagado")
 })
