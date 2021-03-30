@@ -59,65 +59,62 @@ const operation = new Operation()
 
 function asignDigit(digit) {
     //separar lo que hay adentro en funciones
-    //Esto va a traer un bug pero lo arreglo con un counter
-    if (v.total == 0) {
+    if (!v.numA) {
         v.total = ""
     }
     if (!v.operator && isNumber(digit)) {
-        v.total += "" + parseFloat(digit);
-        v.numA = parseFloat(v.total)
-        ui.display = v.total;
-        console.log("assigned numA: " + v.numA)
-
+        firstDigitIs(digit)
     } else if (v.operator && isNumber(digit)) {
-        v.lastDigit = digit;
-        //COMO HAGO QUE SE AÑADAN DIGITOS EN NUMB HASTA QUE TOQUE OTRA VEZ UN SIMBOLO?
-        if (!v.numB) {
-            v.numB = ""
-        }
-        ui.display = "";
-        v.numB += "" + parseFloat(digit);
-        ui.display += v.numB;
-        v.numB = parseFloat(v.numB)
-        console.log("assigned numB: " + v.numB)
-        // "NUM A TOMA EL LUGAR DE TOTAL PARA VOLVER A RECIBIR NUMB QUE NO TIENE QUE EXISTIR"
-        whichOperationIs(v.operator)
-        v.numA = v.total
-        console.log("Result: " + v.total)
-    } else if (v.numA && isSymbol(digit)) {
-        ui.display = v.total
-        v.operator = digit
-        if (v.lastOperator == v.operator && isSymbol(v.lastDigit) && !digit.includes('=')) {
-            alert("repeats " + v.lastOperator)
-
-        } else if (digit.includes('=')) {
-            console.log(h.wasEqualBefore)
-            h.display = ""
-            console.log("Reassigned operator through equal: " + v.lastOperator)
-            if(h.wasEqualBefore){
-                v.numB = parseFloat(v.lastDigit)
-                whichOperationIs(v.lastOperator)
-                v.numA = v.total
-            }else{
-                v.numA = v.total
-            }
-            h.wasEqualBefore = true
-        } else if (!digit.includes('=')) {
-            h.wasEqualBefore = false
-            v.lastOperator = v.operator
-            console.log("assigned operator: " + v.operator)
-            v.numB = ""
-        }
-        ui.display = v.total
-    } else if (v.numA && v.numB && isSymbol(digit)) {
-        // if (isNumber(v.lastDigit)) {
-        //     console.log("Corresponde ingresar un operador")
-        // } else {
-        console.log()
-
-    }
+        secondDigitIs(digit)
+    } else if (isSymbol(digit)) {
+        doOperation(digit)
+    } 
 }
 
+let firstDigitIs = (digit) => {
+    v.total += "" + parseFloat(digit);
+    v.numA = parseFloat(v.total)
+    ui.display = v.total;
+    console.log("assigned numA: " + v.numA)
+}
+let secondDigitIs = (digit) => {
+    ui.display = "";
+    v.lastDigit = digit;  //SIRVE ASI O AL HISTORIAL?
+    v.numB += "" + parseFloat(digit);
+    ui.display += v.numB;
+    v.numB = parseFloat(v.numB)
+    console.log("assigned numB: " + v.numB)
+    whichOperationIs(v.operator)
+    v.numA = v.total
+    console.log("Result: " + v.total)
+}
+
+let doOperation = (digit) => {
+    ui.display = v.total
+    v.operator = digit
+    if (v.lastOperator == v.operator && isSymbol(v.lastDigit) && !digit.includes('=')) {
+        alert("repeats " + v.lastOperator)
+
+    } else if (digit.includes('=')) {
+        console.log(h.wasEqualBefore)
+        h.display = ""
+        console.log("Reassigned operator through equal: " + v.lastOperator)
+        if (h.wasEqualBefore) {
+            v.numB = parseFloat(v.lastDigit)
+            whichOperationIs(v.lastOperator)
+            v.numA = v.total
+        } else {
+            v.numA = v.total
+        }
+        h.wasEqualBefore = true
+    } else if (!digit.includes('=')) {
+        h.wasEqualBefore = false
+        v.lastOperator = v.operator
+        console.log("assigned operator: " + v.operator)
+        v.numB = ""
+    }
+    ui.display = v.total
+}
 function isNumber(digit) {
     for (var i = 0; i < 10; i++) {
         var number = digit.includes(i.toString());
