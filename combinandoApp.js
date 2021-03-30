@@ -8,15 +8,15 @@ class UI {
     constructor() {
         this.isOn = false
         this.display;
-        this.repeatsEqual = false;
-        this.wasEqualBefore = false;
-    }
 
+    }
 }
 class History {
     constructor() {
         this.anyDigit = [];
         this.total = [];
+        this.repeatsEqual = false;
+        this.wasEqualBefore = false;
     }
 }
 class Value {
@@ -58,6 +58,7 @@ const h = new History()
 const operation = new Operation()
 
 function asignDigit(digit) {
+    //separar lo que hay adentro en funciones
     //Esto va a traer un bug pero lo arreglo con un counter
     if (v.total == 0) {
         v.total = ""
@@ -90,19 +91,19 @@ function asignDigit(digit) {
             alert("repeats " + v.lastOperator)
 
         } else if (digit.includes('=')) {
-           
-            ui.display = ""
+            console.log(h.wasEqualBefore)
+            h.display = ""
             console.log("Reassigned operator through equal: " + v.lastOperator)
-            if(ui.wasEqualBefore){
+            if(h.wasEqualBefore){
                 v.numB = parseFloat(v.lastDigit)
                 whichOperationIs(v.lastOperator)
                 v.numA = v.total
             }else{
                 v.numA = v.total
             }
-            ui.wasEqualBefore = true
+            h.wasEqualBefore = true
         } else if (!digit.includes('=')) {
-            ui.wasEqualBefore = false
+            h.wasEqualBefore = false
             v.lastOperator = v.operator
             console.log("assigned operator: " + v.operator)
             v.numB = ""
