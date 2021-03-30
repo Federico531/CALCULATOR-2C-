@@ -17,6 +17,7 @@ class History {
         this.total = [];
         this.repeatsEqual = false;
         this.wasEqualBefore = false;
+        this.wasNumberBefore = false;
     }
 }
 class Value {
@@ -69,12 +70,15 @@ function asignDigit(digit) {
 }
 
 let firstDigitIs = (digit) => {
+    h.wasNumberBefore = true;
     v.total += "" + parseFloat(digit);
     v.numA = parseFloat(v.total)
     ui.display = v.total;
+    v.lastDigit = v.numA;
     console.log("assigned numA: " + v.numA)
 }
 let secondDigitIs = (digit) => {
+    h.wasNumberBefore = true;
     ui.display = "";
     v.numB += "" + parseFloat(digit);
     ui.display += v.numB;
@@ -87,16 +91,18 @@ let secondDigitIs = (digit) => {
 }
 
 let doOperation = (digit) => {
+
     ui.display = v.total
     v.operator = digit
-    if (v.lastOperator == v.operator && isSymbol(v.lastDigit) && !digit.includes('=')) {
+    
+    if (v.lastOperator == v.operator && !digit.includes('=') && !h.wasEqualBefore && !h.wasNumberBefore) {
         alert("repeats " + v.lastOperator)
 
     } else if (digit.includes('=')) {
-        console.log(h.wasEqualBefore)
         h.display = ""
-        console.log("Reassigned operator through equal: " + v.lastOperator)
+        console.log("Reassigned operator" + v.lastOperator + "through equal: " )
         if (h.wasEqualBefore) {
+            console.log("pasa por aca")
             v.numB = parseFloat(v.lastDigit)
             whichOperationIs(v.lastOperator)
             v.numA = v.total
@@ -111,6 +117,7 @@ let doOperation = (digit) => {
         v.numB = ""
     }
     ui.display = v.total
+    h.wasNumberBefore = false;
 }
 function isNumber(digit) {
     for (var i = 0; i < 10; i++) {
