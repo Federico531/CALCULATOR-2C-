@@ -30,9 +30,7 @@ class Value {
 
     }
 }
-const v = new Value()
-const ui = new UI()
-const h = new History()
+
 class Operation {
     sum(a, b) {
         v.total = a + b
@@ -51,13 +49,13 @@ class Operation {
         return v.total
     }
     equals() {
-        whichOperationIs(v.lastDigit)
     }
 }
-//CONCATENATE DIGIT
-//numA numB tienen que ser parseFloat si o si para hacer test?
-//si no son parseFloat de entrada hay que transformarlos luego
-//y silo asigno a total como String para que se vaya concatenando hasta llegar uny luego lo convierto en float
+
+const v = new Value()
+const ui = new UI()
+const h = new History()
+const operation = new Operation()
 
 function asignDigit(digit) {
     //Esto va a traer un bug pero lo arreglo con un counter
@@ -81,22 +79,35 @@ function asignDigit(digit) {
         ui.display += v.numB;
         v.numB = parseFloat(v.numB)
         console.log("assigned numB: " + v.numB)
-   // "NUM A TOMA EL LUGAR DE TOTAL PARA VOLVER A RECIBIR NUMB QUE NO TIENE QUE EXISTIR"
+        // "NUM A TOMA EL LUGAR DE TOTAL PARA VOLVER A RECIBIR NUMB QUE NO TIENE QUE EXISTIR"
         whichOperationIs(v.operator)
         v.numA = v.total
         console.log("Result: " + v.total)
-
     } else if (v.numA && isSymbol(digit)) {
-        v.numB = ""
         ui.display = v.total
         v.operator = digit
-        if (v.lastOperator == v.operator && isSymbol(v.lastDigit)) {
+        if (v.lastOperator == v.operator && isSymbol(v.lastDigit) && !digit.includes('=')) {
             alert("repeats " + v.lastOperator)
-        } else {
-            v.lastDigit = digit;
-            v.lastOperator = v.operator;
+
+        } else if (digit.includes('=')) {
+           
+            ui.display = ""
+            console.log("Reassigned operator through equal: " + v.lastOperator)
+            if(ui.wasEqualBefore){
+                v.numB = parseFloat(v.lastDigit)
+                whichOperationIs(v.lastOperator)
+                v.numA = v.total
+            }else{
+                v.numA = v.total
+            }
+            ui.wasEqualBefore = true
+        } else if (!digit.includes('=')) {
+            ui.wasEqualBefore = false
+            v.lastOperator = v.operator
             console.log("assigned operator: " + v.operator)
+            v.numB = ""
         }
+        ui.display = v.total
     } else if (v.numA && v.numB && isSymbol(digit)) {
         // if (isNumber(v.lastDigit)) {
         //     console.log("Corresponde ingresar un operador")
@@ -130,7 +141,6 @@ function isSymbol(digit) {
     }
 }
 function whichOperationIs(digit) {
-    const operation = new Operation();
     switch (true) {
         case digit.includes("+"): operation.sum(v.numA, v.numB);
             break;
@@ -142,8 +152,8 @@ function whichOperationIs(digit) {
             break;
         case digit.includes("%"): alert('es un porcentaje!');
             break;
-        case digit.includes("="): operation.equals();
-            break;
+        // case digit.includes("="): operation.equals();
+        //     break;
         default: alert('Typed a number when should have typed symbol');
     }
 }
