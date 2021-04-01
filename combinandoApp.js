@@ -1,4 +1,4 @@
-//FIX "123" "+" "321" "=" (479) (=) (480)
+//MAKE BUTTON  NEGATE +/-
 //NUM B = 1
 //UI Y LOGICA SEPARADOS
 //ALL CONSOLE LOGS ARE UI
@@ -44,10 +44,10 @@ const operation = new Operation()
 
 function asignDigit(digit) {
     //separar lo que hay adentro en funciones
-    if (!v.numA) { v.total = "" }
+    if (!v.numA && isNumber(digit)) { v.total = "" }
     if (!v.operator && isNumber(digit)) { firstDigitIs(digit) }
     else if (v.operator && isNumber(digit)) { secondDigitIs(digit) }
-    else if (isSymbol(digit)) { doOperation(digit) }
+    else if (v.numA && isSymbol(digit)) { doOperation(digit) }
 
 }
 
@@ -74,20 +74,22 @@ let secondDigitIs = (digit) => {
 
 let doOperation = (digit) => {
 
-    ui.display = v.total
     v.operator = digit
-
-    if (v.lastOperator == v.operator && !digit.includes('=') && !h.wasEqualBefore && !h.wasNumberBefore) {
+    //repeatsOperator()
+    if (v.lastOperator == v.operator
+        && !digit.includes('=')
+        && !h.wasEqualBefore
+        && !h.wasNumberBefore) {
         alert("repeats " + v.lastOperator)
 
     } else if (digit.includes('=')) {
-        h.display = ""
         console.log("Reassigned operator" + v.lastOperator + "through equal")
+        //reOperatesWith(v.lastOperator){} 
         if (h.wasEqualBefore) {
-            console.log("pasa por aca")
             v.numB = parseFloat(v.lastDigit)
             whichOperationIs(v.lastOperator)
             v.numA = v.total
+
         } else {
             v.numA = v.total
         }
@@ -136,6 +138,9 @@ function whichOperationIs(digit) {
             break;
         case digit.includes("%"): alert('es un porcentaje!');
             break;
+        case digit.includes("."): alert('es un punto');
+            break;
+
         // case digit.includes("="): operation.equals();
         //     break;
         default: alert('Typed a number when should have typed symbol');
