@@ -1,10 +1,11 @@
 //MAKE BUTTON  NEGATE +/-
-//NUM B = 1
+//ADD CURRENT DIGIT FOR DECIMAL
 //UI Y LOGICA SEPARADOS
 //ALL CONSOLE LOGS ARE UI
 //MAKE DOT BUTTON
 //MAKE MORE UNIT TESTS
 //CREATE HISTORY THROUGH ARRAY CLASSES
+//VER BIEN DECIMALES NECESITARIA SER BEFORE DI
 class UI {
     constructor() {
         this.isOn = false
@@ -18,16 +19,19 @@ class History {
         // this.repeatsEqual = false;
         this.wasEqualBefore = false;
         this.wasNumberBefore = false;
+        this.isFloat = false;
     }
 }
 class Value {
-    constructor(numA, numB, operator, lastOperator, lastDigit, total) {
+    constructor(numA, numB, operator, lastOperator, lastDigit, total, currentDigit) {
         this.numA = numA
         this.numB = numB
         this.operator = operator
         this.lastOperator = lastOperator
         this.lastDigit = lastDigit
+        this.currentDigit = currentDigit
         this.total = total
+        this.secondSymbolExists = false;
     }
 }
 class Operation {
@@ -36,6 +40,15 @@ class Operation {
     multiply(a, b) { return v.total = a * b }
     divide(a, b) { return v.total = a / b }
     equals() { }
+    decimal() {
+        if (!v.currentDigit) {
+            v.currentDigit = "0."
+            console.log("quiso asignar el 0 decimal")
+        } else {
+            v.currentDigit += "."
+        }
+
+    }
 }
 const v = new Value()
 const ui = new UI()
@@ -45,36 +58,74 @@ const operation = new Operation()
 function asignDigit(digit) {
     //separar lo que hay adentro en funciones
     if (!v.numA && isNumber(digit)) { v.total = "" }
-    if (!v.operator && isNumber(digit)) { firstDigitIs(digit) }
-    else if (v.operator && isNumber(digit)) { secondDigitIs(digit) }
+    if (!v.operator && isNumber(digit) || digit.includes('.') && !v.operator) { firstDigitIs(digit) }
+    else if (v.operator && isNumber(digit) || digit.includes('.')) { secondDigitIs(digit) }
     else if (v.numA && isSymbol(digit)) { doOperation(digit) }
 
 }
 
 let firstDigitIs = (digit) => {
     h.wasNumberBefore = true;
-    v.total += "" + parseFloat(digit);
-    v.numA = parseFloat(v.total)
+    if (!digit.includes('.')) {
+        v.total += "" + parseFloat(digit);
+        v.numA = parseFloat(v.total)
+        v.currentDigit = v.numA
+    } else if (digit.includes('.') && !h.isFloat) {
+        h.isFloat = true;
+        console.log("paso por aca firstDigit")
+        operation.decimal()
+        v.numA = v.currentDigit
+        v.total = v.numA
+        console.log("esto es numA" + v.numA)
+    }
     ui.display = v.total;
     v.lastDigit = v.numA;
     console.log("assigned numA: " + v.numA)
 }
+
+
+
+
 let secondDigitIs = (digit) => {
+    console.log("asi quedo numA cuando llega a secondDigit " + v.numA)
     h.wasNumberBefore = true;
+    v.currentDigit = v.numB
+    if (!digit.includes('.') ) {
+        v.numB += "" + parseFloat(digit);
+        
+    } else if (digit.includes('.')) {
+        if (h.isFloat == true){
+            console.log("B ya tiene decimales, ingrese un numero")
+        }else{
+            h.isFloat = true;
+            operation.decimal()
+            v.numB = v.currentDigit
+            v.lastDigit = v.numB;
+            operation.decimal()
+            v.numA = v.currentDigit
+            v.total = v.numA
+        }
+    }
     ui.display = "";
-    v.numB += "" + parseFloat(digit);
     ui.display += v.numB;
-    v.numB = parseFloat(v.numB);
-    v.lastDigit = v.numB;
     console.log("assigned numB: " + v.numB)
-    whichOperationIs(v.operator)
-    v.numA = v.total
-    console.log("Result: " + v.total)
+    if (v.secondSymbolExists == true) {
+        whichOperationIs(v.operator)
+        v.numA = v.total //esto se debería asignar si second symbol exists
+        v.numB = parseFloat(v.numB);
+        console.log("second Symbol exists")
+        console.log("Result: " + v.total)
+    }
 }
 
 let doOperation = (digit) => {
-
+    v.numA = parseFloat(v.numA)
+    if (v.operator) {
+        v.secondSymbolExists = true
+    }
     v.operator = digit
+    h.isFloat = false;
+
     //repeatsOperator()
     if (v.lastOperator == v.operator
         && !digit.includes('=')
